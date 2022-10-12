@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { contactsSlice } from './contactsSlice';
+// import { contactsSlice } from './contactsSlice';
 import { del } from '../redux/contactsSlice';
 
 axios.defaults.baseURL = 'https://63453e45dcae733e8fed14a8.mockapi.io/contacts';
