@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchContacts, deleteContact } from './contactsOperations';
+import { fetchContacts, deleteContact, addContact } from './contactsOperations';
 
 const initialState = {
   contacts: {
@@ -10,62 +10,54 @@ const initialState = {
   filter: '',
 };
 
+// хелперы
+const setPending = state => {
+  state.contacts.isLoading = true;
+  state.contacts.error = null;
+};
+const setError = (state, action) => {
+  state.contacts.isLoading = false;
+  state.contacts.error = action.payload;
+};
+
+// Слайс для контактов
 export const contactsSlice = createSlice({
   name: 'contacts',
   initialState: initialState,
   reducers: {
-    add(state, action) {
-      const findName = state.contacts.items.find(
-        el => el.name.toLowerCase() === action.payload.name.toLowerCase()
-      );
-
-      findName
-        ? alert(`${state.contacts.items.name} is already in contacts`)
-        : state.contacts.items.push(action.payload);
-    },
-    del(state, action) {
-      const index = state.contacts.items.findIndex(
-        task => task.id === action.payload
-      );
-      state.contacts.items.splice(index, 1);
-    },
     filterAdd(state, action) {
-      // console.log("state", state, action)
       state.filter = action.payload;
     },
   },
   extraReducers: {
     // встоенный IMMER который не мутирует state! только для Redux Toolkit
-    [fetchContacts.pending]: state => {
-      state.contacts.isLoading = true;
-      state.contacts.error = null;
-    },
+    [fetchContacts.pending]: setPending,
+    [addContact.pending]: setPending,
+    [deleteContact.pending]: setPending,
+
     [fetchContacts.fulfilled]: (state, action) => {
       // console.log('action', action.payload);
       // console.log('state', state.contacts);
       state.contacts.items = action.payload;
       state.contacts.isLoading = false;
     },
-    [fetchContacts.rejected]: (state, action) => {
+    [addContact.fulfilled]: (state, action) => {
+      state.contacts.items = [action.payload, ...state.contacts.items];
       state.contacts.isLoading = false;
-      state.contacts.error = action.payload;
+      // console.log('action.payload', action.payload.name);
     },
-    [deleteContact.pending]: state => {
-      state.contacts.isLoading = true;
-      state.contacts.error = null;
-    },
-    [deleteContact.fulfilled]: state => {
+    [deleteContact.fulfilled]: (state, action) => {
+      const index = state.contacts.items.findIndex(
+        item => item.id === action.payload
+      );
+      state.contacts.items.splice(index, 1);
       state.contacts.isLoading = false;
     },
-    [deleteContact.rejected]: 
-      (state, action) => {
-        state.contacts.isLoading = false;
-        state.contacts.error = action.payload;
-      },
 
+    [fetchContacts.rejected]: setError,
+    [addContact.rejected]: setError,
+    [deleteContact.rejected]: setError,
   },
 });
 
-// console.log(contactsSlice);
-
-export const { add, del, filterAdd } = contactsSlice.actions;
+export const { filterAdd } = contactsSlice.actions;

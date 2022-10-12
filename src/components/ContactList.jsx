@@ -1,16 +1,11 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchContacts, deleteContact } from '../redux/contactsOperations';
-import {
-  List,
-  Item,
-  ButtonDelete,
-  ContactName,
-} from './ui/ContactList.styled';
+import { List, Item, ButtonDelete, ContactName } from './ui/ContactList.styled';
 
 export const ContactList = () => {
   const { items, error } = useSelector(state => state.root.contacts);
-  // const filter = useSelector(state => state.root.filter);
+  const filter = useSelector(state => state.root.filter);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,23 +14,21 @@ export const ContactList = () => {
 
   // console.log(items);
 
-  // const filteredContacts = () => {
-  //   const normalizedFilter = filter?.toLowerCase();
+  const filteredContacts = () => {
+    const normalizedFilter = filter?.toLowerCase();
 
-  //   return contacts.filter(contact =>
-  //     contact.name.toLowerCase().includes(normalizedFilter)
-  //   );
-  // };
+    return items.filter(item =>
+      item.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
 
-  // const contactsList = filteredContacts();
+  const contactsList = filteredContacts();
 
   return (
     <>
-      {/* <Loader/> */}
-     {/* {isLoading ? <Loader/>: <div></div>} */}
       {error && <h1>Oops, something's wrong... Try again</h1>}
       <List>
-        {items.map(({ id, name, phone }) => (
+        {contactsList.map(({ id, name, phone }) => (
           <Item key={id} id={id}>
             <ContactName>{name}:</ContactName>
             {phone}
