@@ -48,7 +48,7 @@ export const contactsSlice = createSlice({
     },
     [deleteContact.fulfilled]: (state, action) => {
       const index = state.contacts.items.findIndex(
-        item => item.id === action.payload
+        item => item.id === action.payload.id
       );
       state.contacts.items.splice(index, 1);
       state.contacts.isLoading = false;

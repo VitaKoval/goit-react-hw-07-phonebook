@@ -10,12 +10,12 @@ import {
 
 export function ContactForm() {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
   const { items } = useSelector(state => state.root.contacts);
 
   const newContact = {
     name,
-    number,
+    phone,
   };
 
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ export function ContactForm() {
   };
 
   const handleChangeNumber = evt => {
-    setNumber(evt.currentTarget.value);
+    setPhone(evt.currentTarget.value);
   };
 
   const handleSubmit = evt => {
@@ -38,14 +38,14 @@ export function ContactForm() {
     if (findName) {
       alert(`${name} is already in contacts`);
       setName('');
-      setNumber('');
+      setPhone('');
       return;
     }
 
     dispatch(addContact(newContact));
 
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   return (
@@ -71,7 +71,7 @@ export function ContactForm() {
         pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
         placeholder="Enter a phone number to add to contacts"
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-        value={number}
+        value={phone}
         onChange={handleChangeNumber}
         required
       />

@@ -1,6 +1,3 @@
-// import { useState, useEffect } from 'react';
-// import { nanoid } from 'nanoid';
-// import ContactForm from './contactForm/ContactForm';
 import { ContactForm } from './ContactForm';
 import { Container } from './ui/App.styled';
 import { Filter } from './Filter';
